@@ -1,0 +1,23 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-20.04
+
+variables:
+  buildConfiguration: "Release"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        steps:
+          - script: dotnet build --configuration $(buildConfiguration)
+            displayName: "dotnet build $(buildConfiguration)"
+
+  - stage: Test
+    jobs:
+      - job: UnitTests
+        steps:
+          - script: dotnet test --configuration $(buildConfiguration)
+            displayName: "dotnet test"
