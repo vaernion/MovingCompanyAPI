@@ -22,3 +22,8 @@ resource "azurerm_app_service" "moving" {
     use_mercurial      = false
   }
 }
+
+data "azurerm_app_service" "moving" {
+  name                = azurerm_app_service.moving.name
+  resource_group_name = azurerm_app_service.moving.resource_group_name
+}
