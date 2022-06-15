@@ -32,7 +32,7 @@ provider "azuread" {
 }
 
 resource "azurerm_resource_group" "moving" {
-  name     = "${var.environment}-rg-moving-${var.namespace}"
+  name     = "${var.environment}-${var.namespace}-rg-moving"
   location = var.location
 
   tags = {
