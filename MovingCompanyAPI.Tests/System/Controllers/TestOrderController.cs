@@ -9,7 +9,7 @@ namespace MovingCompanyAPI.Tests;
 public class TestOrderController
 {
 
-    private List<Order> GetTestOrders()
+    private static List<Order> GetTestOrders()
     {
         return OrderService.GenerateExampleOrders();
     }
