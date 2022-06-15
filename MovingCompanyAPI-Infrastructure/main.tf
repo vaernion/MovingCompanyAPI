@@ -28,3 +28,12 @@ provider "azurerm" {
 provider "azuread" {
   tenant_id = data.azurerm_client_config.current.tenant_id
 }
+
+resource "azurerm_resource_group" "moving" {
+  name     = "${var.environment}-rg-moving-${var.namespace}"
+  location = var.location
+
+  tags = {
+    environment = var.environment
+  }
+}

@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dotnet-build-${{ env.DOTNET_SDK}}
-          path: bin/
+          path: MovingCompanyAPI/bin/
 
   terraform:
     name: "Terraform"
@@ -112,3 +112,11 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+
+  deploy:
+    name: "Deploy API"
+    runs-on: ubuntu-20.04
+    needs: [build, terraform]
+    steps:
+      - name: "Placeholder deploy"
+        run: echo "this is a placeholder job"
