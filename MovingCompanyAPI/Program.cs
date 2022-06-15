@@ -35,8 +35,6 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // SonarCloud considers this a risk despite the IsDevelopment check
-    // app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {

@@ -1,21 +1,40 @@
-# Moving Company API
+# Moving Company API [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vaernion_MovingCompanyAPI&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vaernion_MovingCompanyAPI)
 
 ## Introduction
 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.
+Simple API for managing orders for the Moving Company. It consists of a ASP.NET Core web app running on an Azure
 
-## Getting Started
+## Prerequisites
 
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
+This project uses .NET 6.0 and Terraform. Terraform Cloud is used by default as the remote state backend. GitHub workflows are included for CI/CD.
 
-1. Installation process
-2. Software dependencies
-3. Latest releases
-4. API references
+SonarCloud is used for
+
+## Setup
+
+Add the following variables to GitHub repo settings -> secrets.
+
+```sh
+SONAR_TOKEN # SonarCloud user token
+TF_API_TOKEN # Terraform Cloud API token
+```
+
+Configure cloud block arguments in `MovingCompanyAPI-Infrastructure/main.tf`.
 
 ## Build and Test
 
-TODO: Describe and show how to build your code and run the tests.
+```sh
+dotnet restore
+dotnet build --configuration Release --no-restore
+dotnet test --no-restore
+```
+
+```sh
+cd MovingCompanyAPI-Infrastructure
+terraform init
+terraform plan
+terraform apply
+```
 
 ## API v1
 
@@ -26,13 +45,3 @@ TODO: Describe and show how to build your code and run the tests.
 | POST   | /orders     | Add a new order.      | Order        | Order           |
 | PUT    | /orders/:id | Edit an order.        | Order        | None            |
 | DELETE | /orders/:id | Delete an order.      | None         | None            |
-
-## Contribute
-
-TODO: Explain how other users and developers can contribute to make your code better.
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
