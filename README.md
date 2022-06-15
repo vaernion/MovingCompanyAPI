@@ -2,13 +2,13 @@
 
 ## Introduction
 
-Simple API for managing orders for the Moving Company. It consists of a ASP.NET Core web app running on an Azure
+Simple API for managing orders for the Moving Company. It consists of a ASP.NET Core web app running on an Azure app service instance.
 
 ## Prerequisites
 
 This project uses .NET 6.0 and Terraform. Terraform Cloud is used by default as the remote state backend. GitHub workflows are included for CI/CD.
 
-SonarCloud is used for
+SonarCloud is used for code quality checks. A workspace has to be connected to the GitHub repo.
 
 ## Setup
 
