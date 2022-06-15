@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MovingCompanyAPI.Models;
 using MovingCompanyAPI.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MovingCompanyAPI.Controllers.V2
 {
@@ -35,13 +36,13 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpGet]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<List<Order>> GetAll() => OrderService.GetAll();
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Order> Get(int id)
         {
             var order = OrderService.Get(id);
@@ -54,8 +55,8 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpPost]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Create(Order Order)
         {
             Order.UpdateDate = DateTime.Now;
@@ -64,9 +65,9 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Update(int id, Order Order)
         {
             if (id != Order.Id)
@@ -83,9 +84,8 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Delete(int id)
         {
             var Order = OrderService.Get(id);

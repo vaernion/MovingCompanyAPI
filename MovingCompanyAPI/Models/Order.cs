@@ -16,9 +16,11 @@ public class Order
     public DateTime OrderDate { get; set; }
 
     [Required]
+    [StringLength(100, MinimumLength = 5)]
     public string AddressFrom { get; set; } = string.Empty;
 
     [Required]
+    [StringLength(100, MinimumLength = 5)]
     public string AddressTo { get; set; } = string.Empty;
 
     public string Note { get; set; } = string.Empty;
@@ -40,6 +42,7 @@ public class OrderServices
 public class Customer
 {
     [Required]
+    [StringLength(100, MinimumLength = 5)]
     public string Name { get; set; } = string.Empty;
 
     [Required]

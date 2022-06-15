@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovingCompanyAPI.Models;
 using MovingCompanyAPI.Services;
@@ -92,17 +93,23 @@ public class TestOrderController
         };
 
         dynamic result = orderController.Create(newOrder);
-        int newId = result.Value.Id;
+        var createdResult = result as CreatedAtActionResult;
+
+        Assert.NotNull(createdResult);
+        if (createdResult == null)
+            throw new Exception("Order was not created");
 
         Assert.IsType<CreatedAtActionResult>(result);
+        Assert.Equal(StatusCodes.Status201Created, createdResult.StatusCode);
 
-        var addedOrder = orderController.Get(newId);
+        var addedOrder = orderController.Get(result.Value.Id);
         if (addedOrder.Value == null)
             throw new Exception("Order was not retrieved");
 
         Assert.Equal(newOrder.OrderDate, result.Value.OrderDate);
         Assert.Equal(newOrder.Customer.Email, addedOrder.Value.Customer.Email);
     }
+
 
     [Fact]
     public void UpdateOrder_Works()
