@@ -35,9 +35,13 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public ActionResult<List<Order>> GetAll() => OrderService.GetAll();
 
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<Order> Get(int id)
         {
             var order = OrderService.Get(id);
@@ -50,6 +54,8 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public IActionResult Create(Order Order)
         {
             Order.UpdateDate = DateTime.Now;
@@ -58,6 +64,9 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Update(int id, Order Order)
         {
             if (id != Order.Id)
@@ -74,6 +83,9 @@ namespace MovingCompanyAPI.Controllers.V1
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(int id)
         {
             var Order = OrderService.Get(id);
