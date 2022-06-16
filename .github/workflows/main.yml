@@ -89,7 +89,7 @@ jobs:
       - name: Terraform Validate (prod)
         id: validate_prod
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir=environments/staging validate -no-color
+        run: terraform -chdir=environments/prod validate -no-color
 
       - name: Terraform Plan (staging)
         id: plan_staging
@@ -132,7 +132,7 @@ jobs:
         run: exit 1
 
         # Deploy staging on pull request
-      - name: Terraform Apply (prod)
+      - name: Terraform Apply (staging)
         if: github.event_name == 'pull_request'
         run: terraform -chdir=environments/staging apply -auto-approve -input=false
 
