@@ -1,19 +1,22 @@
+variable "environment" {
+  type        = string
+  description = "Name of the environment"
+}
+
 variable "namespace" {
   type        = string
   description = "Namespace used for naming various resources. Should be complex enough to be globally unique."
-  default     = "movingapi22"
+}
+
+variable "suffix" {
+  type        = string
+  description = "Resource name suffix to uniquely identify this module instance."
 }
 
 variable "location" {
   type        = string
   description = "Azure region resources are created in. Resource groups use this value, and resources inherit hierarchically."
   default     = "West Europe"
-}
-
-variable "environment" {
-  type        = string
-  description = "Name of the environment"
-  default     = "dev"
 }
 
 variable "app_service_sku_tier" {
@@ -31,7 +34,6 @@ variable "app_service_sku_size" {
 variable "app_repo_url" {
   type        = string
   description = "URL to the source code repo"
-  default     = "https://github.com/vaernion/MovingCompanyAPI"
 }
 
 variable "app_repo_branch" {

@@ -1,25 +1,83 @@
 # Moving Company API [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vaernion_MovingCompanyAPI&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vaernion_MovingCompanyAPI) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=vaernion_MovingCompanyAPI&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=vaernion_MovingCompanyAPI) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=vaernion_MovingCompanyAPI&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=vaernion_MovingCompanyAPI) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=vaernion_MovingCompanyAPI&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=vaernion_MovingCompanyAPI) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=vaernion_MovingCompanyAPI&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=vaernion_MovingCompanyAPI)
 
-## Introduction
+## Description
 
-Simple API for managing orders for the Moving Company. It consists of a ASP.NET Core web app running on an Azure app service instance.
+Example REST API for managing orders for a Moving Company. It consists of a ASP.NET Core web app running on an Azure app service instance.
+
+Terraform Cloud is used as the remote state backend. GitHub workflows are included for CI/CD.
+
+SonarCloud is used for code quality checks.
 
 ## Prerequisites
 
-This project uses .NET 6.0 and Terraform. Terraform Cloud is used by default as the remote state backend. GitHub workflows are included for CI/CD.
+This project uses .NET 6.0 and Terraform. Infrastructure is provisioned in Azure.
 
-SonarCloud is used for code quality checks. A workspace has to be connected to the GitHub repo.
+The [setup](#setup) guide assumes that the code is stored in GitHub, and that Terraform Cloud and SonarCloud accounts have been created.
 
 ## Setup
 
-Add the following variables to GitHub repo settings -> secrets.
+To use SonarCloud, a SonarCloud workspace has to be connected to the GitHub repo.
+
+Add the following variables to GitHub repo -> settings -> secrets.
 
 ```sh
-SONAR_TOKEN # SonarCloud user token
 TF_API_TOKEN # Terraform Cloud API token
+SONAR_TOKEN # SonarCloud user token
 ```
 
-Configure cloud block arguments in `MovingCompanyAPI-Infrastructure/main.tf`.
+To authenticate Terraform Cloud to your Azure subscription, create a Service Principal:
+
+```ps1
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/SUBSCRIPTION_ID"
+```
+
+In Terraform Cloud, create workspaces for dev/staging/prod, with a CLI-driven workflow.
+
+```sh
+moving-api-dev
+moving-api-staging
+moving-api-prod
+```
+
+In each workspace, go to Settings -> General and set Terraform Working Directory:
+
+```sh
+# workspace: moving-api-dev
+infrastructure/environments/dev
+# save settings
+# repeat for staging and prod
+```
+
+In your Terraform Cloud organization, create a variable set for these workspaces, and add environment variables from the newly created Service Principal:
+
+```sh
+# variable set
+# make sure to create environment variables and not Terraform variables
+ARM_TENANT_ID
+ARM_SUBSCRIPTION_ID
+ARM_CLIENT_SECRET
+ARM_CLIENT_ID # appId
+```
+
+Finally configure organization name in the cloud block in `main.tf` in each of `./infrastructure/environments/[dev/prod/staging]`.
+
+```sh
+terraform {
+# ...
+  cloud {
+    organization = "your-org"
+    # ...
+  }
+}
+```
+
+## Creating infrastructure in dev environment
+
+```sh
+cd infrastructure/environments/dev
+terraform init
+terraform apply
+```
 
 ## Build and Test
 
