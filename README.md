@@ -94,6 +94,10 @@ terraform plan
 terraform apply
 ```
 
+## CI/CD flow
+
+Pull Requests updates the staging environment if tests pass, and the PR is commented with the `terraform plan` results. Once merged with main, the production environment is updated as long as the tests pass for prod.
+
 ## API v1
 
 | Method | Endpoint    | Description           | Request body | Response  body  |
