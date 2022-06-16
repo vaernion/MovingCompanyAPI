@@ -4,16 +4,12 @@ terraform {
   cloud {
     organization = "vaernion"
     hostname     = "app.terraform.io"
-
-    workspaces {
-      name = "moving-api-dev"
-    }
   }
 }
 
 module "moving" {
-  source          = "../../modules/app-service"
-  environment     = "dev"
+  source          = "./modules/app-service"
+  environment     = split("-", terraform.workspace)[2] # extract env from "moving-api-env"
   namespace       = var.namespace
   suffix          = "moving"
   location        = var.location

@@ -25,13 +25,13 @@ TF_API_TOKEN # Terraform Cloud API token
 SONAR_TOKEN # SonarCloud user token
 ```
 
-To authenticate Terraform Cloud to your Azure subscription, create a Service Principal:
+To authenticate Terraform Cloud to your Azure subscription, create a Service Principal.
 
 ```ps1
 az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/SUBSCRIPTION_ID"
 ```
 
-In Terraform Cloud, create workspaces for dev/staging/prod, with a CLI-driven workflow.
+In your Terraform Cloud organization, create the following workspaces, with a CLI-driven workflow.
 
 ```sh
 moving-api-dev
@@ -39,16 +39,7 @@ moving-api-staging
 moving-api-prod
 ```
 
-In each workspace, go to Settings -> General and set Terraform Working Directory:
-
-```sh
-# workspace: moving-api-dev
-infrastructure/environments/dev
-# save settings
-# repeat for staging and prod
-```
-
-In your Terraform Cloud organization, create a variable set for these workspaces, and add environment variables from the newly created Service Principal:
+In your Terraform Cloud organization, create a variable set for these workspaces, and add environment variables from the newly created Service Principal.
 
 ```sh
 # variable set
@@ -59,7 +50,7 @@ ARM_CLIENT_SECRET
 ARM_CLIENT_ID # appId
 ```
 
-Finally configure organization name in the cloud block in `main.tf` in each of `./infrastructure/environments/[dev/prod/staging]`.
+Finally configure organization name in `./infrastructure/main.tf`.
 
 ```sh
 terraform {
@@ -74,8 +65,12 @@ terraform {
 ## Creating infrastructure in dev environment
 
 ```sh
-cd infrastructure/environments/dev
-terraform init
+cd infrastructure
+# set TF_WORKSPACE = moving-api-dev
+# windows
+./dev-init.ps1 
+# linux
+./dev-init.sh
 terraform apply
 ```
 
