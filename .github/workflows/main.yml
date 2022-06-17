@@ -61,40 +61,32 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_version: ">1.1.0"
 
-      - name: Terraform Format (staging)
-        id: fmt_staging
+      - name: Set staging workspace
+        run: |
+          echo "TF_WORKSPACE=moving-api-staging" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
-        run: terraform -chdir=environments/staging fmt -check
 
-      - name: Terraform Format (prod)
-        id: fmt_prod
+      - name: Set prod workspace
+        run: |
+          echo "TF_WORKSPACE=moving-api-staging" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir=environments/prod fmt -check
 
-      - name: Terraform Init (staging)
-        id: init_staging
+      - name: Terraform Format (${{ env.TF_WORKSPACE }})
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init (${{ env.TF_WORKSPACE }})
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate (${{ env.TF_WORKSPACE }})
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan (${{ env.TF_WORKSPACE }})
+        id: plan
         if: github.event_name == 'pull_request'
-        run: terraform -chdir=environments/staging init
-
-      - name: Terraform Init (prod)
-        id: init_prod
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir=environments/prod init
-
-      - name: Terraform Validate (staging)
-        id: validate_staging
-        if: github.event_name == 'pull_request'
-        run: terraform -chdir=environments/staging validate -no-color
-
-      - name: Terraform Validate (prod)
-        id: validate_prod
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir=environments/prod validate -no-color
-
-      - name: Terraform Plan (staging)
-        id: plan_staging
-        if: github.event_name == 'pull_request'
-        run: terraform -chdir=environments/staging plan -no-color -input=false
+        run: terraform plan -no-color -input=false
         continue-on-error: true
 
       - name: Update Pull Request
@@ -127,19 +119,16 @@ jobs:
               body: output
             })
 
-      - name: Terraform Plan Status (staging)
+      - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-        # Deploy staging on pull request
-      - name: Terraform Apply (staging)
-        if: github.event_name == 'pull_request'
-        run: terraform -chdir=environments/staging apply -auto-approve -input=false
-
-        # Ensure production mirrors main branch
-      - name: Terraform Apply (prod)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform -chdir=environments/prod apply -auto-approve -input=false
+        # apply on PRs or pushes to main
+      - name: Terraform Apply (${{ env.TF_WORKSPACE }})
+        if: |
+          github.event_name == 'pull_request' ||
+          (github.ref == 'refs/heads/main' && github.event_name == 'push')
+        run: terraform apply -auto-approve -input=false
 
   sonarcloud:
     name: Sonarcloud
