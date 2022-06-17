@@ -68,7 +68,7 @@ jobs:
 
       - name: Set prod workspace
         run: |
-          echo "TF_WORKSPACE=moving-api-staging" >> $GITHUB_ENV
+          echo "TF_WORKSPACE=moving-api-prod" >> $GITHUB_ENV
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
       - name: Terraform Format (${{ env.TF_WORKSPACE }})
