@@ -97,10 +97,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt_staging.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init_staging.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate_staging.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan_staging.outcome }}\`
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
 
             <details><summary>Show Plan</summary>
 
@@ -173,6 +173,7 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"vaernion_MovingCompanyAPI" /o:"vaernion" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet restore
           dotnet build --configuration Release --no-restore
+          dotnet test --collect "Code Coverage"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   deploy:
